@@ -23,10 +23,10 @@ model = PingNet(exc_input_func=np.sin,
                 w_initial_I = -4*w_unit, # baseline inhibitory synaptic weight
                 w_initial_E =  10*w_unit, # baseline excitatory synaptic weight
                 w_initial_EI =  4*w_unit, # baseline feedback inhibition synaptic weight
-                w_initial_EE =  25*w_unit, # baseline recurrent excitatory synaptic weight
-                w_initial_E_Fb =  2*w_unit, # baseline output to excitatory synaptic weight (when connect_exc_fb = True)
+                w_initial_EE =  15*w_unit, # baseline recurrent excitatory synaptic weight
+                w_initial_E_Fb =  4*w_unit, # baseline output to excitatory synaptic weight (when connect_exc_fb = True)
                 w_II = -4*w_unit,
-                w_EI_Ext = 2*w_unit,
+                w_EI_Ext = 3*w_unit,
                 
                 connect_exc_inh_input = True,
                 connect_inh_inh_input = True,
@@ -41,6 +41,9 @@ with model:
     p_inh_neurons = nengo.Probe(model.inh.neurons, synapse=0.01)
     p_out = nengo.Probe(model.out, synapse=0.01)
     p_out_neurons = nengo.Probe(model.out.neurons, synapse=0.01)
+    p_inh_weights = nengo.Probe(model.conn_I, 'weights', sample_every=1.)
+    p_exc_weights = nengo.Probe(model.conn_E, 'weights', sample_every=1.)
+    p_rec_weights = nengo.Probe(model.conn_EE, 'weights', sample_every=1.)
 
 with nengo.Simulator(model) as sim:
     sim.run(15)

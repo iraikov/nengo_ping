@@ -117,8 +117,9 @@ class PingNet(nengo.Network):
             if weights_E is not None:
                 weights_initial_E = weights_E
             else:
+                weights_dist_E = np.random.normal(size=(n_outputs, n_excitatory))
                 weights_initial_E = np.where(np.random.uniform(0, 1, size=(n_outputs, n_excitatory))<p_E,
-                                             np.random.normal(size=(n_outputs, n_excitatory))*w_initial_E, 0)
+                                             (weights_dist_E - weights_dist_E.min()) / (weights_dist_E.max() - weights_dist_E.min())*w_initial_E, 0)
                 
             self.conn_E = nengo.Connection(self.exc.neurons,
                                            self.out.neurons, 
@@ -136,8 +137,9 @@ class PingNet(nengo.Network):
                 if weights_E_Fb is not None:
                     weights_initial_E_Fb = weights_E_Fb
                 else:
+                    weights_dist_E_Fb = np.random.normal(size=(n_excitatory, n_outputs))
                     weights_initial_E_Fb = np.where(np.random.uniform(0, 1, size=(n_excitatory, n_outputs))<p_E_Fb,
-                                                    np.random.normal(size=(n_excitatory, n_outputs))*w_initial_E_Fb, 0)
+                                                    (weights_dist_E_Fb - weights_dist_E_Fb.min()) / (weights_dist_E_Fb.max() - weights_dist_E_Fb.min())*w_initial_E_Fb, 0)
                     self.conn_E_Fb = nengo.Connection(self.out.neurons,
                                                       self.exc.neurons, 
                                                       transform=weights_initial_E_Fb,
@@ -145,8 +147,9 @@ class PingNet(nengo.Network):
                 
             
             if self.n_excitatory > 1:
+                weights_dist_EE = np.random.normal(size=(n_excitatory, n_excitatory))
                 weights_initial_EE = np.where(np.random.uniform(0, 1, size=(n_excitatory, n_excitatory))<p_EE,
-                                              np.random.normal(size=(n_excitatory, n_excitatory))*w_initial_EE, 0)
+                                              (weights_dist_EE - weights_dist_EE.min()) / (weights_dist_EE.max() - weights_dist_EE.min())*w_initial_EE, 0)
 
                 self.conn_EE = nengo.Connection(self.exc.neurons, 
                                                 self.exc.neurons, 
