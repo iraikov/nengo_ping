@@ -146,13 +146,13 @@ class PingNet(nengo.Network):
                                                       synapse=nengo.Alpha(tau_E_Fb))
                 
             
-            if self.n_excitatory > 1:
-                weights_dist_EE = np.random.normal(size=(n_excitatory, n_excitatory))
-                weights_initial_EE = np.where(np.random.uniform(0, 1, size=(n_excitatory, n_excitatory))<p_EE,
+            if self.n_outputs > 1:
+                weights_dist_EE = np.random.normal(size=(n_outputs, n_outputs))
+                weights_initial_EE = np.where(np.random.uniform(0, 1, size=(n_outputs, n_outputs))<p_EE,
                                               (weights_dist_EE - weights_dist_EE.min()) / (weights_dist_EE.max() - weights_dist_EE.min())*w_initial_EE, 0)
 
-                self.conn_EE = nengo.Connection(self.exc.neurons, 
-                                                self.exc.neurons, 
+                self.conn_EE = nengo.Connection(self.out.neurons, 
+                                                self.out.neurons, 
                                                 transform=weights_initial_EE,
                                                 synapse=nengo.Alpha(tau_EE))
             else:
